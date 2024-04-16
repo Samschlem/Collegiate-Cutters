@@ -119,6 +119,476 @@
             </div>
         </section>
         <!-- Footer-->
+        <style>
+            /* Scope all styles to only affect elements within .gruvely-popup */
+            .gruvely-popup, .gruvely-popup * {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+            .header {
+              z-index: 10;
+            }
+            #closePopup {
+                color: black;
+                font-size: 15px;
+                font-weight: bold;
+                background-color: transparent;
+                position: absolute; /* Absolute positioning relative to the email-popup */
+                top: 40px; /* Adjust as necessary for your design */
+                right: 10px; /* Adjust as necessary for your design */
+                cursor: pointer; /* Changes the cursor to a pointer to indicate it's clickable */
+                border: none; /* Removes the border */
+                padding: 5px 10px; /* Adds some padding inside the button */
+                border-radius: 5px; /* Optional: adds rounded corners */
+            }
+            #closePopup:hover {
+                color: grey; /* Slightly darker grey on hover for a visual feedback */
+            }
+            .close {
+                color: white;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+            
+            .close:hover,
+            .close:focus {
+                color: grey;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            .chatIcon {
+                overflow: hidden; /* Ensures the image doesn't overflow the circular div */
+                display: block;
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                padding: 0px;
+                border-radius: 50%;
+                cursor: pointer;
+                scale: 1.2;
+            }
+            
+            
+            
+            #chatIcon:hover {
+                transform: scale(1.2); /* Increase the size by 20% on hover */
+                transition: transform 0.3s ease; /* Add a smooth transition effect */
+            }
+            #chatbox {
+                background:white;
+                width: 100%; /* Adjust the width as needed */
+                height: 100%; /* Adjust the height as needed */
+                border: none;
+                z-index: 99999;
+                display:none;
+            }
+            #chatbox-container {
+                z-index: 99999;
+                width: 100%;
+                height: 0px;
+                display: none;
+                border-top: 2px solid #ccc; /* Example: 2px solid black border on top */
+                border-bottom: 4px solid #ccc; /* Example: 2px solid black border on bottom */
+            }
+            
+            
+            #close-chat {
+                font-size: 15px;
+                font-weight: bold;
+                z-index: 99999;
+                position: absolute;
+                margin-right: 10px;
+                margin-top: 60px;
+                top: 0;
+                right: 0;
+                background-color: transparent;
+                color: white;
+                border: none;
+                cursor: pointer;
+                display: none;
+            }
+            #close-chat:hover {
+                color: grey;
+            }
+            /* This is the CSS for the "Connect with Us" popup. Include it in your <head> tag or external stylesheet. */
+            .connect-popup {
+                position: fixed;
+                bottom: 70px;
+                right: 60px;
+                width: 450px;
+                background: #212529;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                border-top-left-radius: 15px;
+                border-top-right-radius: 15px;
+                box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+                z-index: 1000;
+                visibility: hidden; /* Use visibility instead of display for CSS transitions */
+                opacity: 0;
+                transform: translateY(10px); /* Start slightly lower */
+                transition: opacity 0.5s, transform 0.5s; /* Animate opacity and position */
+            }
+            .connect-popup.show {
+                visibility: visible;
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .connect-popup p {
+                text-align: center;
+            }
+            .connect-popup h2 {
+                margin-top: 0; /* Adjust as needed */
+                margin-bottom: 0; /* Adjust as needed */
+                color: white;
+                text-align: center;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 30px;
+                font-style: normal;
+                font-weight: 700;
+            }
+            .connect-popup .option {
+                border-top: 1px solid #ccc;
+                display: block;
+                cursor: pointer;
+                padding: 10px;
+                border-bottom: 1px solid #ccc;
+                text-decoration: none;
+                color: white;
+                text-align: left;
+                Font-size: 16px;
+                Font-style: normal;
+            }
+            .option-icon {
+                margin-right: 8px; /* Adjust the spacing as needed */
+                width: 20px; /* Adjust size as needed */
+                height: 20px; /* Adjust size as needed */
+            }
+            @keyframes shake {
+                0%, 100% { opacity: 100% }
+                0%, 100% { margin-left: 0; }
+                50% { margin-left: -5px; }
+              }
+              
+              .option:hover .option-icon {
+                animation: shake 0.5s ease-in-out forwards;
+                opacity: 100%; /* Adjusting to make the icon fully opaque on hover */
+              }
+              
+            .connect-popup .option:hover {
+                background-color: #2E3B52;
+            }
+            
+            .connect-popup .close {
+                float: right;
+                padding: 5px;
+                text-decoration: none;
+                font-size: 20px;
+                transform: translateY(-5px);
+            }
+            
+            .connect-popup .close:hover {
+                color: #565656;
+            }
+            /* Add this to your CSS */
+            .connect-button {
+                transform: scale(.8);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 250px; /* Adjust as needed */
+                background-color: #212529; /* Adjust color as needed */
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                position: fixed;
+                bottom: 10px; /* Adjust as needed */
+                right: 40px; /* Adjust as needed */
+                z-index: 999999;
+            }
+            
+            .connect-button span {
+                font-size: 16px; /* Adjust as needed */
+                color: white;
+            }
+            
+            .connect-button .hamburger-icon {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                height: 20px; /* Adjust as needed */
+                width: 25px; /* Adjust as needed */
+            }
+            
+            .connect-button .hamburger-icon span {
+                display: block;
+                height: 2px; /* Thinner line */
+                background-color: white;
+                transition: all 0.3s ease;
+            }
+            
+            .connect-button .hamburger-icon span:nth-child(1),
+            .connect-button .hamburger-icon span:nth-child(3) {
+                width: 100%;
+            }
+            
+            .connect-button .hamburger-icon span:nth-child(2) {
+                width: 80%; /* Middle line is 80% as long */
+            }
+            .connect-button .mail-icon img {
+                height: auto;
+                transform: translateY(3px); /* Moves the icon down by 2 pixels */
+            }
+            .connect-button .divider {
+                height: 30px; /* Adjust the height as needed */
+                width: 2px;
+                background-color: white;
+                margin: 0 10px; /* Spacing around the dividers */
+            }
+            .email-popup {
+                z-index: 99999;
+                height: 300px;
+                width: 100%;
+                display: none;
+                background-color: #E0E0DB; 
+                border-top: 3px solid white; 
+                border-bottom: 2px solid white;
+            }
+            .live-container {
+              padding:3px 10px;
+              border-radius: 15px;
+              background-color: green;
+              display: inline-flex;
+              align-items: center;
+              height: 100%; /* Adjust as necessary */
+              margin-left: 20px;
+              top: 50%;
+              left: 200px;
+              font-size: 0.9em; /* Adjust as necessary */
+              color: #fff; /* Adjust color as necessary */
+          }
+          
+          .live-text {
+              color: white;
+              font-weight: bold;
+              margin-right:10px;
+          }
+          
+          .live-indicator {
+              width: 10px;
+              height: 10px;
+              background-color: #00FF00; /* Green color */
+              border-radius: 50%;
+              box-shadow: 0 0 0 rgba(0, 255, 0, 0.7);
+              animation: pulse 2s infinite;
+          }
+          
+          @keyframes pulse {
+              0% {
+                  transform: scale(0.9);
+                  box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
+              }
+              70% {
+                  transform: scale(1);
+                  box-shadow: 0 0 0 10px rgba(0, 255, 0, 0);
+              }
+              100% {
+                  transform: scale(0.9);
+                  box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
+              }
+          }
+            
+            /* Rest of your CSS */
+            
+            @media only screen and (max-width: 600px) {
+                .connect-popup {
+                    position: fixed;
+                    height: 100%;
+                    width: 100%;
+                    bottom: 0px;
+                    right: 0px;
+                    background: #212529;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+                    z-index: 8888888;
+                    visibility: hidden; /* Use visibility instead of display for CSS transitions */
+                    opacity: 0;
+                    transform: translateY(10px); /* Start slightly lower */
+                    transition: opacity 0.5s, transform 0.5s; /* Animate opacity and position */
+                }
+                .connect-popup .option {
+                    display: block;
+                    cursor: pointer;
+                    margin-top: auto;
+                    padding: 10px;
+                    border-bottom: 1px solid #ccc;
+                    text-decoration: none;
+                    color: white;
+                    text-align: left;
+                }
+                .connect-button {
+                    transform: scale(.8);
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 250px; /* Adjust as needed */
+                    background-color: black; /* Adjust color as needed */
+                    color: white;
+                    padding: 10px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                    position: fixed;
+                    bottom: 2px; /* Adjust as needed */
+                    right: 2px; /* Adjust as needed */
+                    z-index: 999999;
+                }
+            }
+             
+            </style>
+             <!-- This is the HTML for the "Connect with Us" popup. Place it at the end of your body tag. -->
+            <div class="gruvely-popup">
+            <div id="connect-popup" class="connect-popup">
+                <div class="close" onclick="togglePopup()">&times;</div>
+                <h2>Connect Center</h2>
+                <div id="emailPopup" class="email-popup">
+                    <!-- Your iframe or content goes here -->
+                    <iframe src="https://gruvelybots.onrender.com/andrew" frameborder="0" style="height:100%; width:100%;"></iframe>
+                    <button id="closePopup" onclick="toggleEmailPopup()">Close Form</button>
+                </div>
+                <div id="chatbox-container">
+                    <iframe id="chatbox" src="https://gruvelybots.onrender.com/demo23"></iframe>
+                    <button id="close-chat" onclick="toggleChat()">Close Chat</button>
+                </div>
+                <div class="options">
+                    <div onclick="toggleChat()" class="option">
+                        <img src="https://www.gruvely.com/static/chaticon-white.png" alt="Chat Icon" style="height: 25px; transform: translateY(0px); opacity: 50%;" class="option-icon">Chat With Us
+                        <div class="live-container">
+                          <span class="live-text">LIVE</span>
+                          <div class="live-indicator"></div>
+                      </div>
+                    </div>
+                    <!-- Use an <a> tag with href="tel:" for the call action -->
+                    <a href="tel:+12092062330" class="option">
+                        <img src="https://www.gruvely.com/static/phoneicon-white.png" alt="Call Icon" style="height:20px; transform: translateY(0px); opacity: 50%;" class="option-icon">Call Me
+                    </a>
+                    <div onclick="toggleEmailPopup()" class="option">
+                        <img src="https://www.gruvely.com/static/mail-icon.png" alt="Email Icon" style="height:25px; transform: translateY(0px); opacity: 50%;" class="option-icon">Email Us
+                    </div>
+                </div>
+                
+                <!-- Placeholder for the Email Popup Iframe -->
+                
+            </div>
+            <!-- Updated button with a mail icon -->
+            <div id="connect-button" class="connect-button" onclick="togglePopup()">
+                <span>Connect with Me</span>
+                <div class="divider"></div>
+                <div class="button-icons">
+                    <a href="mailto:your-email@example.com" class="mail-icon" onclick="event.stopPropagation();">
+                        <!-- Your mail icon SVG or font icon here -->
+                        <img src="https://www.gruvely.com/static/mail-icon.png" alt="Email" style = "height:30px" />
+                    </a>
+                </div>
+                <div class="divider"></div>
+                <div class="hamburger-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            </div>
+            <script>
+            function toggleChat() {
+                var chatbox = document.getElementById("chatbox");
+                var chatboxcontainer = document.getElementById("chatbox-container");
+                var closechat = document.getElementById("close-chat");
+                var header = document.querySelector(".header"); // Adjust this selector to target your header
+                var emailpopup = document.getElementById("emailPopup");
+            
+                // Check if the viewport width is 600px or less
+                if (emailpopup.style.display === "block") {
+                    emailpopup.style.display = "none";
+                    }
+                if (chatbox.style.display === "none" || chatbox.style.display === "") {
+                    chatbox.style.display = "block";
+                    chatboxcontainer.style.display = "block";
+                    closechat.style.display = "block";
+                } else {
+                    chatbox.style.display = "none";
+                    chatboxcontainer.style.display = "none";
+                    closechat.style.display = "none";
+                }
+            }
+            // This is the JavaScript to control the popup. Include it before the closing </body> tag or in an external JS file.
+            function closePopup() {
+                var isMobile = window.innerWidth <= 600;
+                var popup = document.getElementById('connect-popup');
+                popup.classList.remove('show'); // Hide the popup by removing the class
+                if(header && isMobile) header.style.zIndex = "10";
+            }
+            
+            // Call this function to show the popup, you can call it on page load or after a specific action
+            function showPopup() {
+                var popup = document.getElementById('connect-popup');
+                popup.classList.add('show'); // Use class to control visibility and animation
+                var isMobile = window.innerWidth <= 600;
+                if(header && isMobile) header.style.zIndex = "1";
+            }
+            // Update your JavaScript with this function
+            function togglePopup() {
+                var isMobile = window.innerWidth <= 600;
+                var popup = document.getElementById('connect-popup');
+                // Check if the popup already has the 'show' class to determine its visibility
+                if (popup.classList.contains('show')) {
+                    popup.classList.remove('show'); // If visible, hide it by removing the class
+                    // Optional: Wait for the animation to finish before hiding
+                        popup.style.visibility = 'hidden';
+                        if(header && isMobile) header.style.zIndex = "10";
+            
+                } else {
+                    popup.style.visibility = 'visible'; // Ensure it's visible for the animation to show
+                    popup.classList.add('show'); // Show the popup by adding the class
+                    if(header && isMobile) header.style.zIndex = "1";
+                }
+            }
+            document.addEventListener('DOMContentLoaded', function() {
+                var isNotMobile = window.innerWidth >= 600;
+                if (isNotMobile) {
+                    showPopup(); // Call the showPopup function to display the popup
+                }
+                
+            });
+            function adjustChatboxHeight() {
+                var screenHeight = window.innerHeight; // Get the screen height
+                var desiredHeightPercentage = 0.3; // Example: 80% of the screen height
+                var chatboxHeight = screenHeight * desiredHeightPercentage + 100; // Calculate desired height
+                document.getElementById('chatbox-container').style.height = chatboxHeight + 'px'; // Set the height
+            }
+            function toggleEmailPopup() {
+                var chatbox = document.getElementById("chatbox");
+                var chatboxcontainer = document.getElementById("chatbox-container");
+                var closechat = document.getElementById("close-chat");
+                var emailpopup = document.getElementById("emailPopup");
+                if (emailpopup.style.display === "" || emailpopup.style.display === "none") {
+                    emailpopup.style.display = "block";
+                    chatbox.style.display = "none";
+                    chatboxcontainer.style.display = "none";
+                    closechat.style.display = "none";
+                } else {
+                    emailpopup.style.display = "none";
+                }
+            }
+            
+            
+            // Call the function when the page loads
+            window.onload = adjustChatboxHeight;
+            
+            // Optionally, adjust the height when the window is resized
+            window.onresize = adjustChatboxHeight;
+            </script>
         <footer class="footer py-4">
             <div class="container">
                 <div class="row align-items-center">
